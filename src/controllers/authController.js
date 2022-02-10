@@ -1,6 +1,7 @@
 import db from "../database.js";
 import { stripHtml } from "string-strip-html";
 import bcrypt from "bcrypt";
+import { v4 as uuid } from 'uuid';
 
 async function postSignUp(req, res){
     const user = req.body;
@@ -28,6 +29,35 @@ async function postSignUp(req, res){
     };
 };
 
+async function postLogin(req, res){
+    const {email, password} = req.body;
+
+    try{
+        const user = await db.collection('users').findOne({ email });
+
+        if(!user){
+            res.sendStatus(401);
+            return;
+        }
+
+        const isAuthorized = bcrypt.compareSync(password, user.password)
+        if(isAuthorized){
+            const token = uuid();
+            await db.collection("sessions").insertOne({
+                userId: user._id,
+                token
+            })
+            return res.send(token);
+        }
+        res.sendStatus(401);
+    }
+    catch(error){
+        console.log(error);
+        res.sendStatus(401);
+    }
+};
+
 export {
-    postSignUp
+    postSignUp,
+    postLogin
 };
