@@ -11,6 +11,20 @@ async function getProducts(req, res) {
     };
 };
 
+async function postProducts(req, res) {
+    const { name, price, stock, images } = req.body;
+
+    try {
+        
+        await db.collection('products').insertOne({ name, price, stock, images });
+
+        res.sendStatus(201);
+    } catch (error) {
+        res.status(500).send(aqui)
+    }
+};
+
 export {
-    getProducts
+    getProducts,
+    postProducts
 };
