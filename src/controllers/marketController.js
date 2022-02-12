@@ -12,11 +12,11 @@ async function getProducts(req, res) {
 };
 
 async function postProducts(req, res) {
-    const { name, price, stock, images } = req.body;
+    const { name, price, stock, image } = req.body;
 
     try {
         
-        await db.collection('products').insertOne({ name, price, stock, images });
+        await db.collection('products').insertOne({ name, price, stock, image });
 
         res.sendStatus(201);
     } catch (error) {
