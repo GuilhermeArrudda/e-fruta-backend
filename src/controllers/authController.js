@@ -43,11 +43,12 @@ async function postLogin(req, res){
         const isAuthorized = bcrypt.compareSync(password, user.password)
         if(isAuthorized){
             const token = uuid();
+            const userData = { token, user: { userId: user._id, name: user.name, image: user.image } };
             await db.collection("sessions").insertOne({
-                userId: user._id,
-                token
+                userData
             })
-            return res.send(token);
+            console.log(userData)
+            return res.send(userData);
         }
         res.sendStatus(401);
     }
