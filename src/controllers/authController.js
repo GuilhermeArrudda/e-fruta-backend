@@ -58,23 +58,7 @@ async function postLogin(req, res){
     }
 };
 
-async function signOut(req, res) {
-    const authorization = req.headers.authorization;
-    const token = authorization?.replace('Bearer ', '');
-
-    try {
-        await db.collection('session').deleteOne({
-            token
-        });
-        res.sendStatus(200);
-    } catch (error) {
-        console.log(error);
-        res.sendStatus(500);
-    };
-};
-
 export {
     postSignUp,
-    postLogin,
-    signOut
+    postLogin
 };
